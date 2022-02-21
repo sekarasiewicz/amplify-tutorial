@@ -1,0 +1,12 @@
+{
+  "AppSyncApiName": "EggHeadTutorial",
+  "DynamoDBBillingMode": "PAY_PER_REQUEST",
+  "DynamoDBEnableServerSideEncryption": false,
+  "AuthCognitoUserPoolId": {
+    "Fn::GetAtt": [
+      "authEggHeadTutorial",
+      "Outputs.UserPoolId"
+    ]
+  },
+  "AuthModeLastUpdated": "2022-02-20T19:08:19.472Z"
+}
