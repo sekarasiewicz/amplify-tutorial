@@ -1,4 +1,5 @@
 import '../styles/globals.css'
+import '@aws-amplify/ui-react/styles.css';
 import Amplify, { AuthModeStrategyType } from 'aws-amplify'
 import awsconfig from '../src/aws-exports'
 
