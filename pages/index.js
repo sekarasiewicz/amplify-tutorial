@@ -3,9 +3,23 @@ import Link from "next/link";
 
 import styles from '../styles/Home.module.css'
 import { useEffect, useState } from "react";
-import { Auth } from "aws-amplify";
+import { Auth, withSSRContext } from "aws-amplify";
+import { serializeModel } from "@aws-amplify/datastore/ssr"
+import { Blog } from "../src/models";
 
-export default function Home() {
+export async function getServerSideProps({req}) {
+  const SSR = withSSRContext({req})
+  let blogData
+  try {
+    blogData = await SSR.DataStore.query(Blog)
+  } catch (e) {
+    console.error(e)
+  }
+
+  return { props: {blogs: serializeModel(blogData)}}
+}
+
+export default function Home({blogs}) {
   const [user, setUser] = useState()
   useEffect(() => {
     const getUser = async () => {
@@ -29,6 +43,7 @@ export default function Home() {
         await Auth.signOut()
         setUser(null)
       } }>Sign out</button> : <Link href="/sign-in">Sign in</Link> }
+      {blogs.map((blog) => <h1 key={blog.id}>{blog.name}</h1>)}
     </div>
   )
 }
