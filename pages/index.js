@@ -21,17 +21,21 @@ export async function getServerSideProps({req}) {
 
 export default function Home({blogs}) {
   const [user, setUser] = useState()
+  const [isAdmin, setIsAdmin] = useState(false)
+
   useEffect(() => {
     const getUser = async () => {
       try {
         const user = await Auth.currentAuthenticatedUser()
         setUser(user)
+        console.log('dup', user.getSignInUserSession().getAccessToken().payload)
+        setIsAdmin(user.getSignInUserSession().getAccessToken().payload['cognito:groups'].includes('admin'))
       } catch (e) {
         console.log(e)
       }
     }
     getUser()
-  })
+  }, [])
   return (
     <div className={styles.container}>
       <Head>
@@ -44,6 +48,7 @@ export default function Home({blogs}) {
         setUser(null)
       } }>Sign out</button> : <Link href="/sign-in">Sign in</Link> }
       {blogs.map((blog) => <h1 key={blog.id}>{blog.name}</h1>)}
+      {isAdmin && <h2>You are an Admin</h2>}
     </div>
   )
 }
